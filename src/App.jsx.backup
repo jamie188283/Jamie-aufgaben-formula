@@ -1,0 +1,208 @@
+import { useState } from 'react'
+import './App.css'
+
+const choices = [
+  'Geschirrspüler',
+  'Müll (Zimmer)',
+  'Müll (Wohnung)',
+  'Pfand zusammenpacken',
+  'Wäsche',
+  'Einkaufen'
+]
+
+export default function App() {
+  const [role, setRole] = useState(null)
+  const [selected, setSelected] = useState([])
+  const [shopping, setShopping] = useState('')
+  const [money, setMoney] = useState('')
+  const [tasks, setTasks] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('jamieTasks') || '[]') }
+    catch { return [] }
+  })
+
+  const completed = tasks.filter(t => t.done).length
+
+  function toggleChoice(choice) {
+    setSelected(old => old.includes(choice)
+      ? old.filter(x => x !== choice)
+      : [...old, choice])
+  }
+
+  function sendForm() {
+    if (!selected.length) return
+
+    const sent = selected.map((title, i) => ({
+      id: Date.now() + i,
+      title,
+      done: false,
+      details: title === 'Einkaufen'
+        ? { shopping, money }
+        : null
+    }))
+
+    setTasks(sent)
+    localStorage.setItem('jamieTasks', JSON.stringify(sent))
+    setSelected([])
+    setShopping('')
+    setMoney('')
+    setRole('jamie')
+  }
+
+  function toggleTask(id) {
+    const updated = tasks.map(t =>
+      t.id === id ? { ...t, done: !t.done } : t
+    )
+    setTasks(updated)
+    localStorage.setItem('jamieTasks', JSON.stringify(updated))
+  }
+
+  return (
+    <main className="app">
+      <header>
+        <div className="brand">
+          <span>J</span>
+          <div>JAMIE<span>AUFGABEN FORMULAR</span></div>
+        </div>
+        {role && (
+          <button className="back-role" onClick={() => setRole(null)}>
+            Rolle wechseln
+          </button>
+        )}
+      </header>
+
+      {!role ? (
+        <section className="role-screen">
+          <p className="eyebrow">WILLKOMMEN</p>
+          <h1>Wer bist du<span>?</span></h1>
+          <p>Wähle aus, wie du die App verwenden möchtest.</p>
+
+          <button className="role-card" onClick={() => setRole('jamie')}>
+            <span className="role-letter">J</span>
+            <span>
+              <b>Jamie</b>
+              <small>Aufgaben empfangen und abhaken</small>
+            </span>
+            <span className="arrow">→</span>
+          </button>
+
+          <button className="role-card" onClick={() => setRole('mama')}>
+            <span className="role-letter">M</span>
+            <span>
+              <b>Mama</b>
+              <small>Aufgaben auswählen und verschicken</small>
+            </span>
+            <span className="arrow">→</span>
+          </button>
+        </section>
+      ) : role === 'mama' ? (
+        <>
+          <section className="welcome">
+            <p className="eyebrow">FORMULAR ERSTELLEN</p>
+            <h1>Hallo Mama<span>.</span></h1>
+            <p>Wähle aus, welche Aufgaben Jamie bekommen soll.</p>
+          </section>
+
+          <section className="task-card">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">AUFGABEN AUSWÄHLEN</p>
+                <h2>Was soll gemacht werden?</h2>
+              </div>
+              <span className="count">{selected.length} ausgewählt</span>
+            </div>
+
+            {choices.map(choice => (
+              <label className={`task ${selected.includes(choice) ? 'done' : ''}`} key={choice}>
+                <input
+                  type="checkbox"
+                  checked={selected.includes(choice)}
+                  onChange={() => toggleChoice(choice)}
+                />
+                <span className="checkmark">✓</span>
+                <span className="task-title">{choice}</span>
+              </label>
+            ))}
+          </section>
+
+          {selected.includes('Einkaufen') && (
+            <section className="add-card">
+              <p className="eyebrow">EINKAUFEN</p>
+              <label className="field-label">Was soll eingekauft werden?</label>
+              <textarea
+                value={shopping}
+                onChange={e => setShopping(e.target.value)}
+                placeholder="Schreibe hier die Einkaufsliste..."
+              />
+              <label className="field-label">Wo liegt das Geld?</label>
+              <input
+                value={money}
+                onChange={e => setMoney(e.target.value)}
+                placeholder="Zum Beispiel: Auf dem Küchentisch"
+              />
+            </section>
+          )}
+
+          <button className="send" disabled={!selected.length} onClick={sendForm}>
+            Formular an Jamie senden →
+          </button>
+        </>
+      ) : (
+        <>
+          <section className="welcome">
+            <p className="eyebrow">DEIN PERSÖNLICHER TAGESPLAN</p>
+            <h1>Hey Jamie<span>.</span></h1>
+            <p>Das sind die Aufgaben, die für dich ausgewählt wurden.</p>
+          </section>
+
+          <section className="overview">
+            <div>
+              <span>ERLEDIGT</span>
+              <strong>{completed} <small>/ {tasks.length}</small></strong>
+            </div>
+            <div className="overview-icon">✓</div>
+            <div className="progress">
+              <div style={{ width: `${tasks.length ? completed / tasks.length * 100 : 0}%` }} />
+            </div>
+          </section>
+
+          <section className="task-card">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">DEINE AUFGABEN</p>
+                <h2>Deine Liste</h2>
+              </div>
+              <span className="count">{tasks.length} Aufgaben</span>
+            </div>
+
+            {!tasks.length && (
+              <p className="empty">Du hast momentan keine neuen Aufgaben.</p>
+            )}
+
+            {tasks.map(task => (
+              <div key={task.id}>
+                <label className={`task ${task.done ? 'done' : ''}`}>
+                  <input
+                    type="checkbox"
+                    checked={task.done}
+                    onChange={() => toggleTask(task.id)}
+                  />
+                  <span className="checkmark">✓</span>
+                  <span className="task-title">{task.title}</span>
+                </label>
+
+                {task.details && (
+                  <div className="details">
+                    <p><b>Was soll gekauft werden?</b><br />{task.details.shopping || 'Keine Angabe'}</p>
+                    <p><b>Wo liegt das Geld?</b><br />{task.details.money || 'Keine Angabe'}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </section>
+        </>
+      )}
+
+      <footer>Ein Schritt nach dem anderen. <span>♥</span></footer>
+    </main>
+  )
+}

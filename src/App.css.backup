@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root{font-family:Inter,system-ui,sans-serif;color:#f4f1fa;background:#101014}
+*{box-sizing:border-box}
+body{margin:0;min-width:320px;min-height:100vh;background:radial-gradient(ellipse at 50% 0%,#292039,#15141b 48%,#101014 80%)}
+button,input,textarea{font:inherit}
+.app{width:min(100% - 32px,560px);margin:auto;padding:25px 0 35px}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:35px}
+.brand{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:800;letter-spacing:1px}
+.brand>span{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:#8b5cf6;color:white;font-size:22px}
+.brand div span{display:block;font-size:9px;color:#a59aaf;letter-spacing:2px;margin-top:4px}
+.back-role{background:#292530;border:1px solid #393141;color:#c4a5ff;border-radius:10px;padding:10px;font-size:11px}
+.role-screen{padding-top:45px}
+.role-screen>p:not(.eyebrow){color:#aaa3b2;font-size:14px;margin-bottom:30px}
+.role-card{width:100%;display:flex;align-items:center;gap:15px;text-align:left;padding:20px;margin-bottom:14px;border:1px solid #393141;border-radius:18px;background:#1b1921;color:#f4f1fa;cursor:pointer}
+.role-letter{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;background:#302442;color:#c4a5ff;font-size:23px;font-weight:800}
+.role-card b{display:block;font-size:17px}
+.role-card small{display:block;color:#aaa3b2;font-size:11px;margin-top:5px}
+.role-card .arrow{margin-left:auto;color:#b99aff;font-size:23px}
+.welcome{margin-bottom:27px}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:2px;color:#a78bfa;margin:0 0 10px}
+h1{font-size:36px;letter-spacing:-2px;margin:0 0 8px}
+h1 span,footer span{color:#a78bfa}
+.welcome>p:last-child{color:#aaa3b2;font-size:14px;line-height:1.5}
+.overview,.task-card,.add-card{background:#1b1921;border:1px solid #302a39;border-radius:20px;padding:21px;margin-bottom:16px}
+.overview{display:grid;grid-template-columns:1fr auto;align-items:center;gap:14px}
+.overview>div:first-child span{display:block;font-size:9px;letter-spacing:2px;color:#aaa3b2;margin-bottom:5px}
+.overview strong{font-size:26px}.overview small{font-size:15px;color:#817b89}
+.overview-icon{width:38px;height:38px;border-radius:12px;background:#302442;color:#b99aff;display:grid;place-items:center}
+.progress{grid-column:1/-1;height:6px;background:#35303d;border-radius:10px;overflow:hidden}
+.progress div{height:100%;background:#9b70fa;border-radius:10px}
+.section-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:15px}
+h2{font-size:18px;margin:0}
+.count{font-size:11px;color:#aaa3b2;background:#292530;padding:7px 10px;border-radius:20px;white-space:nowrap}
+.task{display:flex;align-items:center;gap:13px;padding:16px 0;border-top:1px solid #302a39;cursor:pointer}
+.task input{position:absolute;opacity:0;width:1px;height:1px}
+.checkmark{width:24px;height:24px;flex:none;border:1.5px solid #655a70;border-radius:8px;display:grid;place-items:center;color:transparent;font-size:14px}
+.task.done .checkmark{background:#8b5cf6;border-color:#8b5cf6;color:white}
+.task-title{font-size:14px;color:#eee9f4}
+.task.done .task-title{color:#817b89;text-decoration:line-through}
+.field-label{display:block;font-size:13px;color:#eee9f4;margin:16px 0 8px}
+.add-card textarea,.add-card input{width:100%;background:#111015;border:1px solid #393141;border-radius:12px;padding:14px;color:white;outline:none}
+.add-card textarea{min-height:90px;resize:vertical}
+.add-card textarea:focus,.add-card input:focus{border-color:#9b70fa}
+.send{width:100%;padding:17px;border:0;border-radius:14px;background:#8b5cf6;color:white;font-weight:700;cursor:pointer}
+.send:disabled{opacity:.4;cursor:not-allowed}
+.details{margin:0 0 15px 37px;padding:13px;background:#292530;border-radius:12px;color:#c9c2d2;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+.details p{margin:0 0 10px}.details p:last-child{margin:0}.details b{color:#b99aff}
+.empty{color:#aaa3b2;font-size:13px}
+footer{text-align:center;color:#77717e;font-size:12px;padding:18px}
