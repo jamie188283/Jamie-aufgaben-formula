@@ -34,17 +34,23 @@ export default function App() {
   });
 
   async function loadForms() {
-    const { data, error } = await supabase
-      .from('household_forms')
-      .select('*')
-      .order('created_at', { ascending: false });
+    try {
+      const { data, error: queryError } = await supabase
+        .from('household_forms')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-    if (error) {
-      setError('Aufgaben konnten nicht geladen werden: ' + error.message);
-      return;
+      if (queryError) {
+        setError('Aufgaben konnten nicht geladen werden: ' + queryError.message);
+        return false;
+      }
+
+      setForms(data || []);
+      return true;
+    } catch (e) {
+      setError('Verbindungsfehler beim Laden: ' + (e.message || String(e)));
+      return false;
     }
-
-    setForms(data || []);
   }
 
   useEffect(() => {
@@ -97,26 +103,28 @@ export default function App() {
     setSending(true);
     setError('');
 
-    const { error } = await supabase
-      .from('household_forms')
-      .insert({
-        tasks: selected,
-        shopping_items: selected.includes('Einkaufen') ? shopping : null,
-        shopping_money_location: selected.includes('Einkaufen') ? money : null
-      });
+    try {
+      const { error: insertError } = await supabase
+        .from('household_forms')
+        .insert({
+          tasks: selected,
+          shopping_items: selected.includes('Einkaufen') ? shopping : null,
+          shopping_money_location: selected.includes('Einkaufen') ? money : null
+        });
 
-    setSending(false);
+      if (insertError) throw insertError;
 
-    if (error) {
-      setError('Senden fehlgeschlagen: ' + error.message);
-      return;
+      setSelected([]);
+      setShopping('');
+      setMoney('');
+
+      await loadForms();
+      alert('Aufgaben wurden verschickt!');
+    } catch (e) {
+      setError('Senden fehlgeschlagen: ' + (e.message || String(e)));
+    } finally {
+      setSending(false);
     }
-
-    setSelected([]);
-    setShopping('');
-    setMoney('');
-    await loadForms();
-    alert('Aufgaben wurden verschickt!');
   }
 
   function toggleCompleted(formId, task) {
