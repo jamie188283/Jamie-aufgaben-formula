@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Jamie Aufgaben</string>
+    <string name="title_activity_main">Jamie Aufgaben</string>
+    <string name="package_name">de.jamie.aufgaben</string>
+    <string name="custom_url_scheme">de.jamie.aufgaben</string>
+</resources>
